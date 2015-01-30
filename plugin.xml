@@ -27,7 +27,6 @@
     </config-file>
 
     <source-file src="src/android/libs/libammsdk.jar" target-dir="libs"/>
-    <source-file src="src/android/src/Util.java" target-dir="src/com/share/wechatShare" />
     <source-file src="src/android/src/WechatShare.java" target-dir="src/com/share/wechatShare" />
   </platform>
 </plugin>
