@@ -6,7 +6,7 @@ phoneGap wechat sharing to friend,moment,favorite
 
 Example -share to moment
 ```javascript
-TencentShare.shareToMoment({
+WechatShare.shareToMoment({
     "title": "title",
     "summary": "summary",
     "image_url": "http://img3.cache.netease.com/photo/0005/2013-03-07/8PBKS8G400BV0005.jpg",
@@ -19,7 +19,7 @@ TencentShare.shareToMoment({
 ```
 Example -share to friend 
 ```javascript
-TencentShare.shareToSession({
+WechatShare.shareToSession({
     "title": "title",
     "summary": "summary",
     "image_url": "http://img3.cache.netease.com/photo/0005/2013-03-07/8PBKS8G400BV0005.jpg",
@@ -32,7 +32,7 @@ TencentShare.shareToSession({
 ```
 Example -share to favorite 
 ```javascript
-TencentShare.shareToFavorite({
+WechatShare.shareToFavorite({
     "title": "title",
     "summary": "summary",
     "image_url": "http://img3.cache.netease.com/photo/0005/2013-03-07/8PBKS8G400BV0005.jpg",
