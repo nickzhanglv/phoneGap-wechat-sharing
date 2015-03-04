@@ -11,10 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.travelers.together.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
@@ -35,7 +39,7 @@ public class WechatShare extends CordovaPlugin {
   public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
     try {
       this.callbackContext = callbackContext;
-
+      show();
       JSONObject jsonObject = args.getJSONObject(0);
 
       title = jsonObject.getString("title");
@@ -46,6 +50,7 @@ public class WechatShare extends CordovaPlugin {
       final JSONObject result = new JSONObject();
       result.put("result", true);
       final Context context = this.cordova.getActivity().getApplicationContext();
+
       Runnable runable = new Runnable() {
         @Override
         public void run() {
@@ -85,34 +90,69 @@ public class WechatShare extends CordovaPlugin {
           req.message = msg;
           req.scene = scene;
           api.sendReq(req);
+          hidden();
         }
       };
 
       if (action.equals("moment")) {
         scene = SendMessageToWX.Req.WXSceneTimeline;
         cordova.getThreadPool().execute(runable);
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
         return true;
       } else if (action.equals("session")) {
         scene = SendMessageToWX.Req.WXSceneSession;
         cordova.getThreadPool().execute(runable);
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
         return true;
       } else if (action.equals("favorite")) {
         scene = SendMessageToWX.Req.WXSceneFavorite;
         cordova.getThreadPool().execute(runable);
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
         return true;
       } else {
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR));
-        return false;
+        return true;
       }
     } catch (JSONException e) {
       e.printStackTrace();
-      Log.e("Protonet", "JSON Exception Plugin... :(");
+      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR));
     }
-    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR));
-    return false;
+    return true;
+  }
+
+  private void hidden() {
+    final Activity activity = this.cordova.getActivity();
+    cordova.getActivity().runOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+
+        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
+        root.removeViewAt(1);
+      }
+    });
+  }
+
+  private void show() {
+    final Activity activity = this.cordova.getActivity();
+    cordova.getActivity().runOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+
+        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
+
+        RelativeLayout rl = new RelativeLayout(activity);
+        rl.setBackgroundColor(0x90000000);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        rl.setLayoutParams(params);
+        root.addView(rl);
+
+        ProgressBar dlg = new ProgressBar(activity);
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        p.addRule(RelativeLayout.CENTER_IN_PARENT);
+        dlg.setLayoutParams(p);
+        rl.addView(dlg);
+
+      }
+    });
   }
 
   /**
