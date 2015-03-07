@@ -53,6 +53,7 @@
 
   <!-- android -->
   <platform name="android">
+    <preference name="APP_ID" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="WechatShare">
         <param name="android-package" value="com.share.wechatShare.WechatShare"/>
