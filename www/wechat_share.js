@@ -30,17 +30,6 @@ WechatShare.prototype.share = function(options, success, fail) {
   }, function() {
     fail();
   }, "WechatShare", "share", [options]);
- 
-    // message: message,
-    // text: text,
-    // scene: scene
-
-  //    message{
-  //    title: title,
-  //     description: description,
-  //     thumbData: result,
-  //     url: url
-  // }
 };
 
 var wechatShare = new WechatShare();
