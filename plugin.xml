@@ -11,6 +11,46 @@
     <clobbers target="WechatShare" />
   </js-module>
 
+    <platform name="ios">
+    <preference name="APP_ID" />
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="WeChat">
+        <param name="ios-package" value="CDVWeChat"/>
+      </feature>
+      <preference name="wechatappid" value="$APP_ID" />
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleURLName</key>
+          <string>weixin</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>$APP_ID</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <framework src="libc++.dylib" />
+    <framework src="libz.dylib" />
+    <framework src="libsqlite3.0.dylib" />
+    <framework src="Security.framework" />
+    <framework src="SystemConfiguration.framework" />
+
+    <source-file src="src/ios/libWeChatSDK.a" framework="true" />
+
+    <header-file src="src/ios/WXApi.h" />
+    <header-file src="src/ios/WXApiObject.h" />
+
+    <header-file src="src/ios/CDVWeChat.h" />
+    <source-file src="src/ios/CDVWeChat.m" />
+
+  </platform>
+
+
   <!-- android -->
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">

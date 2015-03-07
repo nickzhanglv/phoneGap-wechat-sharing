@@ -24,5 +24,24 @@ WechatShare.prototype.shareToFavorite = function(options, success, fail) {
   }, "WechatShare", "favorite", [options]);
 };
 
+WechatShare.prototype.share = function(options, success, fail) {
+  cordova.exec(function(result) {
+    success(result);
+  }, function() {
+    fail();
+  }, "WechatShare", "share", [options]);
+ 
+    // message: message,
+    // text: text,
+    // scene: scene
+
+  //    message{
+  //    title: title,
+  //     description: description,
+  //     thumbData: result,
+  //     url: url
+  // }
+};
+
 var wechatShare = new WechatShare();
 module.exports = wechatShare;
