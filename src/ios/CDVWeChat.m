@@ -29,6 +29,8 @@ const int SCENE_TIMELINE = 2;
 
 @implementation CDVWeChat
 
+- (void)show;
+
 - (void)pluginInitialize {
     NSString* appId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
     [WXApi registerApp: appId];
@@ -281,10 +283,9 @@ const int SCENE_TIMELINE = 2;
         
         NSString *strTitle = [NSString stringWithFormat:@"Auth结果"];
         NSString *strMsg = [NSString stringWithFormat:@"code:%@,state:%@,errcode:%d", temp.code, temp.state, temp.errCode];
-        
+
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:strTitle message:strMsg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
-        [alert release];
     }
     
     [self.commandDelegate sendPluginResult:result callbackId:self.currentCallbackId];
