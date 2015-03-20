@@ -209,6 +209,35 @@ const int SCENE_TIMELINE = 2;
     self.currentCallbackId = command.callbackId;
 }
 
+
+- (void)login:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* result = nil;
+    
+    if (![WXApi isWXAppInstalled]) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_WECHAT_NOT_INSTALLED];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        return ;
+    }
+    
+    //构造SendAuthReq结构体
+    SendAuthReq* req =[[[SendAuthReq alloc ] init ] autorelease ];
+    req.scope = @"snsapi_userinfo" ;
+    req.state = @"123" ;
+    //第三方向微信终端发送一个SendAuthReq消息结构
+    BOOL success = [WXApi sendReq:req];
+    
+    if (success) {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    } else {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_UNKNOWN];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+        return;
+    }
+    
+    self.currentCallbackId = command.callbackId;
+}
+
 - (NSData*)decodeBase64:(NSString*)base64String {
     NSString* dataUrl =[NSString stringWithFormat:@"data:application/octet-stream;base64,%@", base64String];
     NSURL* url = [NSURL URLWithString: dataUrl];
@@ -246,6 +275,16 @@ const int SCENE_TIMELINE = 2;
                 result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:ERR_UNKNOWN];
                 break;
         }
+    } else if([resp isKindOfClass:[SendAuthResp class]])
+    {
+        SendAuthResp *temp = (SendAuthResp*)resp;
+        
+        NSString *strTitle = [NSString stringWithFormat:@"Auth结果"];
+        NSString *strMsg = [NSString stringWithFormat:@"code:%@,state:%@,errcode:%d", temp.code, temp.state, temp.errCode];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:strTitle message:strMsg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
     }
     
     [self.commandDelegate sendPluginResult:result callbackId:self.currentCallbackId];
